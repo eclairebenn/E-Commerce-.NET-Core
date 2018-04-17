@@ -1,0 +1,28 @@
+<h1>Customer Page here</h1>
+
+@model ecommerce.Models.Customer
+<h3>Add a new customer : </h3>
+<form asp-controller="Customer" asp-action="AddCustomer" method="post">
+    <label asp-for="Name"></label>
+    <input asp-for="Name"/>
+    <span asp-validation-for="Name"></span>
+    <input type="submit" value="Add">
+</form>
+<h5>@TempData["customer"]</h5>
+
+
+<table class="table-striped">
+    <tr>
+        <th>Customer Name</th>
+        <th>Created Date</th>
+        <th>Actions</th>
+    </tr>
+    @foreach(Customer customer in @ViewBag.AllCustomers)
+    {
+        <tr>
+            <td>@customer.Name</td>
+            <td>@customer.CreatedAt.ToString("MMMM dd yyyy")</td>
+            <td><button><a href="/customer/delete/@customer.CustomerId">Delete</a></button></td>        
+        </tr>
+    }
+</table>

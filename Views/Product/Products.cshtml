@@ -1,0 +1,32 @@
+<h1>This is the product page</h1>
+
+
+@model ecommerce.Models.Product
+<div class="col-sm-4">
+    <h3>Add a new product : </h3>
+    <form class="productform" asp-controller="Product" asp-action="AddProduct" method="post">
+        <label asp-for="Name"></label>
+        <input asp-for="Name"/>
+        <span asp-validation-for="Name"></span>
+        <label asp-for="ImageUrl"></label>
+        <input placeholder="https://" asp-for="ImageUrl"/>
+        <span asp-validation-for="ImageUrl"></span>
+        <label asp-for="Description"></label>
+        <input asp-for="Description"/>
+        <span asp-validation-for="Description"></span>
+        <label asp-for="Stock"></label>
+        <input asp-for="Stock"/>
+        <span asp-validation-for="Stock"></span>
+        <input type="submit" value="Create">
+    </form>    
+</div>
+<div class="col-sm-8">
+    @foreach(Product product in ViewBag.AllProducts)
+    {
+        <div class="product">
+            <img class="productimg" src="@product.ImageUrl" alt="@product.Name">
+            <h4>@product.Name</h4>
+            <h4>(@product.Stock left)</h4>
+        </div>
+    }
+</div>

@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<h1>Home page</h1>
+<ul class="nave nav navbar-nav">
+    @foreach(Product product in @ViewBag.AllProducts)
+    {
+        <li>
+            <div>
+                <img class="productimg" src="@product.ImageUrl" alt="@product.Name">
+                <h5>@product.Name</h5>
+                <h5>@product.Stock left</h5>
+            </div>
+        </li>
+    }
+</ul>
+<h5><a href="/products">show more...</a></h5>
+
+<h4>Recent Orders</h4>
+<ul>
+    @foreach(Order order in @ViewBag.AllOrders)
+    {
+        @if(@DateTime.Now.Subtract(@order.CreatedAt) < new TimeSpan( 1, 0, 0 ))
+        {
+            <li>@order.Customer.Name purchased @order.Quantity @order.Product.Name ... @DateTime.Now.Subtract(@order.CreatedAt).ToString("%m") minute(s) ago</li>    
+        }
+        else if(@DateTime.Now.Subtract(@order.CreatedAt) < new TimeSpan( 23, 0, 0 ))
+        {
+            <li>@order.Customer.Name purchased @order.Quantity @order.Product.Name ... @DateTime.Now.Subtract(@order.CreatedAt).ToString("%h") hour(s) ago</li>    
+        }        
+        else
+        {
+            <li>@order.Customer.Name purchased @order.Quantity @order.Product.Name ... @DateTime.Now.Subtract(@order.CreatedAt).ToString("%d") day(s) ago</li>
+        }
+    }
+    <h5><a href="/orders">show all orders...</a></h5>
+</ul>
+
+<h4>New Customers</h4>
+<ul>
+    @foreach(Customer customer in @ViewBag.AllCustomers)
+    {
+        @if(@DateTime.Now.Subtract(@customer.CreatedAt) < new TimeSpan( 1, 0, 0 ))
+        {
+            <li>@customer.Name joined the store @DateTime.Now.Subtract(@customer.CreatedAt).ToString("%m") minute(s) ago</li>    
+        }
+        else if(@DateTime.Now.Subtract(@customer.CreatedAt) < new TimeSpan( 23, 0, 0 ))
+        {
+            <li>@customer.Name joined the store @DateTime.Now.Subtract(@customer.CreatedAt).ToString("%h") hour(s) ago</li>    
+        }
+        else
+        {
+            <li>@customer.Name joined the store @DateTime.Now.Subtract(@customer.CreatedAt).ToString("%d") day(s) ago</li>
+        }
+        
+    }
+    <h5><a href="/customers">show all customers...</a></h5>
+</ul>

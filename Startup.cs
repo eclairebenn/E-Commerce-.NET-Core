@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Stripe;
 
 namespace ecommerce
 {
@@ -29,6 +30,7 @@ namespace ecommerce
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
             services.AddSession();
             services.AddMvc();
             services.AddDbContext<CommerceContext>(options => options.UseNpgsql(Configuration["DBInfo:ConnectionString"]));
@@ -37,6 +39,7 @@ namespace ecommerce
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            StripeConfiguration.SetApiKey(Configuration.GetSection("Stripe")["SecretKey"]);
             loggerFactory.AddConsole();
             if (env.IsDevelopment())
             {

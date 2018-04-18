@@ -17,6 +17,8 @@ namespace ecommerce.Models
         public string Description {get;set;}
         [Required]
         public int Stock {get;set;}
+
+        public decimal Price {get;set;}
         public List<Order> InOrders {get;set;}
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

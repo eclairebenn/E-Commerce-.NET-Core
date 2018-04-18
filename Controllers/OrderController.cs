@@ -8,6 +8,7 @@ using ecommerce.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace ecommerce.Controllers
 {
@@ -53,6 +54,40 @@ namespace ecommerce.Controllers
                 }
             }
             return RedirectToAction("Orders");
+        }
+
+        [HttpPost]
+        [Route("Order/Charge/{productid}")]
+        public IActionResult Charge(string  stripeEmail, string stripeToken, int productid)
+        {
+            var customers = new StripeCustomerService();
+            var charges = new StripeChargeService();
+
+            var customer = customers.Create(new StripeCustomerCreateOptions {
+            Email = stripeEmail,
+            SourceToken = stripeToken
+            });
+            Product product = _context.Products.SingleOrDefault(p => p.ProductId == productid);
+            var charge = charges.Create(new StripeChargeCreateOptions {
+            Amount = (int)product.Price*100,
+            Description = "Sample Charge",
+            Currency = "usd",
+            CustomerId = customer.Id
+            });
+
+            List<Order> AllOrders = _context.Orders.OrderByDescending(d => d.CreatedAt).Include(c => c.Customer).Include(p => p.Product).ToList();
+            List<Product> AllProducts = _context.Products.OrderByDescending(d => d.CreatedAt).ToList();
+            List<Customer> AllCustomers = _context.Customers.OrderByDescending(d => d.CreatedAt).ToList();
+            ViewBag.AllOrders = AllOrders;            
+            ViewBag.AllProducts = AllProducts;
+            ViewBag.AllCustomers = AllCustomers;
+
+            return View("Orders");
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

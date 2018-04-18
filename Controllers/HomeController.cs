@@ -32,7 +32,7 @@ namespace ecommerce.Controllers
             ViewBag.AllCustomers = AllCustomers;
             return View();
         }
-
+        
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
